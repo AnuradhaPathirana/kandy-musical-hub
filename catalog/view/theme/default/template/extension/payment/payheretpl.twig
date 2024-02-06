@@ -1,0 +1,199 @@
+<style>
+.loader {
+  border: 4px solid #dfdfdf;
+  border-radius: 50%;
+  border-top: 4px solid #000;
+  width: 15px;
+  height: 15px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+{% if testmode %}
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ text_testmode }}</div>
+{% endif %}
+
+{% if has_recurring_exception_trial %}
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ text_recurring_exception_trial }}</div>
+{% endif %}
+{% if has_recurring_exception_unsupported_freq %}
+  <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ text_recurring_exception_unsupported_freq }}</div>
+{% endif %}
+{% if has_recurring_exception_unmatching_rec %}
+  <div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ text_recurring_exception_unmatching_rec }}</div>
+{% endif %}
+
+{% if not has_recurring_exceptions %}
+  {% if is_onsite_checkout_enabled %}
+    <div class="buttons">
+        <div class="pull-right">
+          <div id="ph-loader" class="loader-container">
+            <div class="loader"></div>
+          </div>
+          <button id="ph-button" type="button" class="btn btn-primary" onclick="payhere_showmodal()">{{ button_confirm }}</button>
+        </div>
+    </div>
+    <script>
+
+      document.getElementById("ph-loader").style.display = "block";
+      document.getElementById("ph-button").style.display = "none";
+
+      /*
+        Loading the script this way to prevent Twig templating
+        issues. When using the <script> tag to load the library,
+        "undefined object" error for the payhere variable. 
+      */
+      let _s = document.createElement("script");
+      _s.addEventListener("load", function(){
+        document.getElementById("ph-loader").style.display = "none";
+        document.getElementById("ph-button").style.display = "block";
+      });
+      _s.src = "https://www.payhere.lk/lib/payhere.js";
+      document.body.appendChild(_s);
+      
+      function payhere_showmodal(){
+
+        let payment_obj = {
+          sandbox: "{{ sandbox }}",
+          merchant_id: "{{ merchant_id }}",
+          return_url: "{{ return_url }}",
+          cancel_url: "{{ cancel_url }}",
+          notify_url: "{{ status_url }}", 
+          first_name: "{{ firstname }}",
+          last_name: "{{ lastname }}",
+          email: "{{ email }}",
+          phone: "{{ phone }}",
+          address: "{{ address }}",
+          address1: "{{ address1 }}",
+          address2: "{{ address2 }}",
+          zip: "{{ postal_code }}",
+          city: "{{ city }}",
+          state: "{{ state }}",
+          country: "{{ country }}",
+          order_id: "{{ order_id }}",
+          items: "{{ items_text }}",
+          currency: "{{ currency }}",
+          amount: "{{ amount }}",
+          hash: "{{ hash }}"
+        };
+        
+        {% if has_recurring_products %}
+          payment_obj['recurrence'] = "{{ recurring_recurrence }}";
+          payment_obj['duration'] = "{{ recurring_duration }}";
+          payment_obj['startup_fee'] = "{{ recurring_startup }}"
+
+          payment_obj["items"] = "OpenCart Order #{{ order_id }}";
+          payment_obj["item_name_1"] = "OpenCart Order";
+          payment_obj["item_number_1"] = "{{ order_id }}";
+          payment_obj["amount_1"] = "{{ amount + recurring_startup }}";
+          payment_obj["quantity_1"] = "1";
+          payment_obj['custom_1'] = "{{ custom_1 }}";
+        {% else %}
+          {% set i = 1 %}
+          {% for product in products %}
+          {# payment_obj["item_name_{{ i }}"] = "{{ product.name }}";
+          payment_obj["item_number_{{ i }}"] = "{{ product.model }}";
+          payment_obj["amount_{{ i }}"] = "{{ product.price }}";
+          payment_obj["quantity_{{ i }}"] = "{{ product.quantity }}";
+          payment_obj["weight_{{ i }}"] = "{{ product.weight }}"; #}
+          {% set i = i + 1 %}
+          {% endfor %}
+          
+        {% endif %}
+
+        {% if discount_amount_cart %}
+          {# payment_obj["discount_amount_cart"] = "{{ discount_amount_cart }}"; #}
+        {% endif %}
+
+        {# payment_obj["site_title"] = "{{ description }}";
+        payment_obj["logo_url"] = "{{ logo }}";
+        payment_obj["platform"] = "{{ platform }}"; #}
+
+        payhere.onCompleted = function onCompleted(orderId) {
+          window.location = "{{ return_url }}";
+        };
+      
+        payhere.onError = function onError(error) {
+          alert("PayHere: Payment failed with error: " + error);
+        };
+
+        console.log(JSON.stringify(payment_obj));
+        payhere.startPayment(payment_obj);
+      }
+    </script>
+  {% else %}
+    <form action="{{ action }}" method="post">
+        <input type="hidden" name="merchant_id" value="{{ merchant_id }}" />
+        <input type="hidden" name="return_url" value="{{ return_url }}" />
+        <input type="hidden" name="cancel_url" value="{{ cancel_url }}" />
+        <input type="hidden" name="notify_url" value="{{ status_url }}" />
+        <input type="hidden" name="language" value="{{ language }}" />
+    
+        <input type="hidden" name="first_name" value="{{ firstname }}" />
+        <input type="hidden" name="last_name" value="{{ lastname }}" />
+        <input type="hidden" name="email" value="{{ email }}" />
+        <input type="hidden" name="phone" value="{{ phone_number }}" />
+        <input type="hidden" name="address" value="{{ address }}" />
+        <input type="hidden" name="address1" value="{{ address1 }}" />
+        <input type="hidden" name="address2" value="{{ address2 }}" />
+        <input type="hidden" name="zip" value="{{ postal_code }}" />
+        <input type="hidden" name="city" value="{{ city }}" />
+        <input type="hidden" name="state" value="{{ state }}" />
+        <input type="hidden" name="country" value="{{ country }}" />
+        
+        <input type="hidden" name="order_id" value="{{ order_id }}" />
+        <input type="hidden" name="currency" value="{{ currency }}" />
+        <input type="hidden" name="amount" value="{{ amount }}" />
+        <input type="hidden" name="hash" value="{{ hash }}" />
+        
+        {% if has_recurring_products %}
+          <input type="hidden" name="recurrence" value="{{ recurring_recurrence }}" />
+          <input type="hidden" name="duration" value="{{ recurring_duration }}" />
+          <input type="hidden" name="startup_fee" value="{{ recurring_startup }}" />
+
+          <input type="hidden" name="items" value="OpenCart Order #{{ order_id }}" />
+          <input type="hidden" name="item_name_1" value="OpenCart Order" />
+          <input type="hidden" name="item_number_1" value="{{ order_id }}" />
+          <input type="hidden" name="amount_1" value="{{ amount + recurring_startup }}" />
+          <input type="hidden" name="quantity_1" value="1" />
+          <input type="hidden" name="custom_1" value="{{ custom_1 }}" />
+        {% else %}
+          <input type="hidden" name="items" value="{{ items_text }}" />
+          {% set i = 1 %}
+          {% for product in products %}
+          <input type="hidden" name="item_name_{{ i }}" value="{{ product.name }}" />
+          <input type="hidden" name="item_number_{{ i }}" value="{{ product.model }}" />
+          <input type="hidden" name="amount_{{ i }}" value="{{ product.price }}" />
+          <input type="hidden" name="quantity_{{ i }}" value="{{ product.quantity }}" />
+          <input type="hidden" name="weight_{{ i }}" value="{{ product.weight }}" />
+          {% set i = i + 1 %}
+          {% endfor %}
+        {% endif %}
+      
+        {% if discount_amount_cart %}
+        <input type="hidden" name="discount_amount_cart" value="{{ discount_amount_cart }}" />
+        {% endif %}
+
+        <input type="hidden" name="site_title" value="{{ description }}" />
+        <input type="hidden" name="logo_url" value="{{ logo }}" />
+        <input type="hidden" name="platform" value="{{ platform }}" />
+        
+        <div class="buttons">
+        <div class="pull-right">
+          <input type="submit" value="{{ button_confirm }}" class="btn btn-primary" />
+        </div>
+      </div>
+    </form>
+  {% endif %}
+{% endif %}  

@@ -1,0 +1,118 @@
+<footer>
+	<div class="footer-center">
+		<div class="container">
+			{{ position9 }}
+		</div>
+	</div>
+	<div class="footer-links">  
+	  <div class="container">
+		<div class="inner btn-group-vertical">	
+			<div class="row">
+				<div class="col col-md-4 col-sm-6 col-xs-12">
+					<div class="btn-group">
+
+					<div class=footer-logo-content>
+                          <div class="footer-logo">
+                            <img src="../image/catalog/1.kandy-musical-hub/logo/Kandy Musical Hub - Black background.png" alt="footer-logo"/>
+                          </div>
+                          <div class=footer-slogun>
+							<p>Harmony Unleashed Explore Your Melodic Journey with Kandy Musical Hub.</p>
+						  </div>
+                        </div>
+				
+						<div id="btnGroupVerticalDrop4" data-toggle="dropdown" class="dropdown-toggle title">{{ text_about_us }}<i class="visible-xs ion-chevron-down"></i></div>
+						<div class="dropdown-menu footer-content" aria-labelledby="btnGroupVerticalDrop4">
+						{{ position7 }}
+						
+						</div>
+					</div>
+				</div>
+				<div class="col col-md-2 col-sm-6 col-xs-12">
+					<div class="btn-group">
+						<div id="btnGroupVerticalDrop3" data-toggle="dropdown" class="dropdown-toggle title">{{ text_support }}<i class="visible-xs ion-chevron-down"></i></div>
+						<div class="dropdown-menu footer-content" aria-labelledby="btnGroupVerticalDrop3">
+							<ul class="list-unstyled">
+							  <li><a href="{{ account }}">{{ text_account }}</a></li>
+							  <li><a href="{{ order }}">{{ text_order }}</a></li>
+							  <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+							  <li><a href="{{ special }}">{{ text_special }}</a></li>
+							  <li><a href="{{ return }}">{{ text_return }}</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>	
+				  
+				  <div class="col col-md-2 col-sm-6 col-xs-12">
+					<div class="btn-group">
+						<div id="btnGroupVerticalDrop2" data-toggle="dropdown" class="dropdown-toggle title">{{ text_information }}<i class="visible-xs ion-chevron-down"></i></div>
+						<div class="dropdown-menu footer-content footer-information" aria-labelledby="btnGroupVerticalDrop2">
+							<ul class="list-unstyled">
+							{% if informations %}
+								{% for information in informations %}
+								  <li><a href="{{ information.href }}">{{ information.title }}</a></li>
+								{% endfor %}
+							{% endif %}
+							<li><a href="{{ contact }}">{{ text_contact }}</a></li>
+
+						<li><a href=" https://www.facebook.com/profile.php?id=61552301819139&mibextid=LQQJ4d" target = "_blanck">Academy</a></li>
+				
+							</ul>
+						</div>
+					</div>
+				  </div>
+				  <div class="col col-md-4 col-sm-6 col-xs-12">
+						{{ position5 }}
+						<div class="social">
+						  <ul>
+							
+					<li><a href="https://web.facebook.com/GuitarsSrilanka" class="facebook" target="_blank" title="Facebook"></a></li>
+				
+							
+					<li><a href="https://twitter.com/kandymusicalhub" target="_blank" class="twitter" title="Twitter"></a></li>
+				
+							
+					<li><a href="https://www.youtube.com/channel/UCu4IQuuPd7gUTQ7b5-azoag" target="_blank" class="youtube" title="Youtube"></a></li>
+				
+							
+					<li><a href="https://www.tiktok.com/@kandymusicalhub" target="_blank" class="tiktok" title="Tiktok"></a></li>
+				
+							
+					<li><a href="https://www.instagram.com/kandymusicalhub_pvt_ltd/" class="instagram" title="Instagram" target="_blank"></a></li>
+				
+							
+					<li><a href="https://wa.me/+94757953397" class="whatsapp" title="Whatsapp" target="_blank"></a></li>
+				
+						  </ul>
+						</div>
+				  </div>
+				</div>
+		</div>
+	  </div>
+	</div>
+	<div class="footer-copyright">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<p class="text-powered">{{ powered }}</p>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+				{{ position8 }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+						<div id = "common-contact">
+	                     <div id="what-app"><a href="https://wa.me/+94757953397" target = "_blanck" title = "Call On Whatsapp"><img src="https://qa-kmusichub.parttime247.com/image/catalog/Home%20Page%20Contact%20Icons/home_whats.png" alt="Girl in a jacket" width="500" height="600"></a></div>
+                         <div id="mobile-call"> <a href="tel:+94757953397" title = "Call On Mobile"><img src="https://qa-kmusichub.parttime247.com/image/catalog/Home%20Page%20Contact%20Icons/home_call.png" alt="Girl in a jacket" width="500" height="600"></a></div>
+	                    </div>
+				
+</footer>
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+<!--
+OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
+Please donate via PayPal to donate@opencart.com
+//-->
+</div></body></html>
